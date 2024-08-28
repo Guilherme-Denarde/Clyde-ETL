@@ -1,5 +1,6 @@
+import os
 import inquirer
-from utils.display import display_with_art, clear_screen
+from utils.display import display_with_art, clear_screen, process_file  # Ensure correct imports
 from etl.extractor import extract_and_select_file
 from etl.transformer import process_data
 from etl.loader import write_to_file
@@ -19,16 +20,21 @@ def main_menu():
     return answers['action']
 
 def main():
+    global file_name
     data = None
-    file_path = None
     action = main_menu()
+    
     while action != 'Exit':
+        
         if action == 'Extract Data':
             file_path, data = extract_and_select_file(INPUT_DIR)
             if data is not None:
+                file_name = os.path.basename(file_path)
                 print(f"Data extracted from {file_path}")
+                process_file(file_name=file_name)  
             else:
                 print("No data extracted.")
+        
         elif action == 'Transform Data':
             if data is not None:
                 processed_data = process_data(data)
@@ -36,12 +42,14 @@ def main():
                 print("Data transformed.")
             else:
                 print("No data available to transform.")
+        
         elif action == 'Load Data':
             if data is not None:
                 write_to_file(data, data.columns.tolist())
                 print("Data written to CSV file.")
             else:
                 print("No data available to load.")
+        
         elif action == 'Clean Data':
             if data is not None:
                 cleaned_data = handle_data(data)
@@ -52,10 +60,11 @@ def main():
                     print("Failed to clean data.")
             else:
                 print("No data available to clean.")
+        
         elif action == 'AI Analysis':
-            if file_path is not None:
+            if file_name is not None:
                 try:
-                    analysis_results = ai_analysis(file_path)
+                    analysis_results = ai_analysis(file_name)
                     print("AI Analysis completed successfully. Here are some insights:")
                     print(analysis_results)
                 except Exception as e:
