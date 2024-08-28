@@ -1,5 +1,7 @@
 # Clyde - Command Line Yielded Data Extraction and Transformation
 
+![Clyde ASCII Art](https://raw.githubusercontent.com/Grupo-14-8BIT/Img/master/Background/Screenshot%202024-08-27%20224108.png)
+
 Clyde is an ETL tool designed for efficient data extraction and transformation, leveraging local AI processing with Ollama 3.1 for advanced data handling capabilities.
 
 ## Prerequisites
