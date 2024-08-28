@@ -49,8 +49,13 @@ pip install ollama
 ```
 
 ## Usage
+### Prepare Data Directories
+brief note about setting up the directory structure:
+```bash
+Create `data/input` and `data/output` directories. Place each dataset in its own subfolder under `data/input` to ensure the tool can correctly process them.
+```
 
-To run Clyde, execute the following command:
+Ensure your data files are in subfolders within `data/input`. Run Clyde by executing:
 ```bash
 python main.py
 ```
