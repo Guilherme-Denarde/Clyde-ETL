@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 import json
 import os
 import time
-from config.config import OUTPUT_DIR  
+from config.config import OUTPUT_DIR
 
 def analyze_for_bi(data):
     profile = {
@@ -55,17 +55,13 @@ def ai_analysis(file_path):
 
     formatted_data = {
         "data": df_profile['column'].tolist(),
-        "instructions": {
-            "Analyze the provided data and recommend an optimal database schema. \
-            Suggest relationships between dimensions and facts, and identify potential primary and foreign keys."
-        }
+        "instructions": "Analyze the provided data and recommend an optimal database schema. Suggest relationships between dimensions and facts, and identify potential primary and foreign keys."
     }
 
     formatted_json = json.dumps(formatted_data, indent=4)
     print("Formatted Data with Task for Ollama:")
     print(formatted_json)
 
-    # To force to stop end the task, ctrl + c will make it crash
     op = input("Please confirm to proceed with Ollama interaction (yes/no): ")
 
     if op.lower() == 'yes':

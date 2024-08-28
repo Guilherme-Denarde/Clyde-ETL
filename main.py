@@ -6,7 +6,7 @@ from etl.transformer import process_data
 from etl.loader import write_to_file
 from etl.data_cleaner import handle_data
 from etl.ai_analysis import ai_analysis
-from config.config import INPUT_DIR
+from config.config import INPUT_DIR, OUTPUT_DIR
 
 @display_with_art
 def main_menu():
@@ -51,26 +51,35 @@ def main():
                 print("No data available to load.")
         
         elif action == 'Clean Data':
-            if data is not None:
-                cleaned_data = handle_data(data)
-                if cleaned_data is not None:
-                    data = cleaned_data
-                    print("Data cleaned.")
-                else:
-                    print("Failed to clean data.")
+            if data is not None:  
+                print("Data is available for cleaning.")
+                try:
+                    cleaned_data = handle_data(data)
+                    if cleaned_data is not None:
+                        print("Data cleaned successfully.")
+                        data = cleaned_data
+                        output_file = os.path.join(OUTPUT_DIR, f"cleaned_{file_name}")
+                        cleaned_data.to_csv(output_file, index=False)
+                        print(f"Cleaned data has been saved to {output_file}.")
+                    else:
+                        print("No modifications were made to the data.")
+                except Exception as e:
+                    print(f"Error during data cleaning: {e}")
             else:
-                print("No data available to clean.")
+                print("No data available to clean. Please load data first.")
         
         elif action == 'AI Analysis':
             if file_name is not None:
+                file_path = os.path.join(INPUT_DIR, file_name)
                 try:
-                    analysis_results = ai_analysis(file_name)
+                    analysis_results = ai_analysis(file_path)
                     print("AI Analysis completed successfully. Here are some insights:")
                     print(analysis_results)
                 except Exception as e:
                     print(f"Failed to perform AI analysis: {e}")
             else:
                 print("No data file selected for AI analysis, please extract or specify a file first.")
+
         
         action = main_menu()
 

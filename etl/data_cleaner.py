@@ -3,7 +3,9 @@ import pandas as pd
 
 def list_csv_files(directory):
     try:
-        return [file for file in os.listdir(directory) if file.endswith('.csv')]
+        files = [file for file in os.listdir(directory) if file.endswith('.csv')]
+        print(f"Found {len(files)} CSV files.")
+        return files
     except Exception as e:
         print(f"Failed to list files in directory {directory}: {e}")
         return []
@@ -11,7 +13,6 @@ def list_csv_files(directory):
 def select_files_to_process(directory):
     files = list_csv_files(directory)
     if not files:
-        print("No CSV files found.")
         return []
 
     for idx, file in enumerate(files, start=1):
@@ -29,19 +30,14 @@ def select_files_to_process(directory):
         return []
 
 def get_column_info(df):
-    print(df.columns.tolist())
+    print("Available columns:", df.columns.tolist())
     column_name = input("Enter the column name to filter: ")
     values = input("Enter the values to remove, separated by commas (e.g., Node.js,Bash/Shell): ")
     values_to_remove = values.split(',')
     return column_name, values_to_remove
 
-def handle_data(file_path):
-    try:
-        df = pd.read_csv(file_path)
-    except Exception as e:
-        print(f"Failed to load file {file_path}: {e}")
-        return None
-
+def handle_data(df):
+    print("Starting data cleaning process...")
     column_name, values_to_remove = get_column_info(df)
     
     action = input("Choose action - Remove rows (R), Delete values (D), Rename values (N): ").upper()
@@ -55,10 +51,15 @@ def handle_data(file_path):
 
     return df
 
+
 def main():
     directory = input("Enter the path to the directory containing CSV files: ")
     selected_files = select_files_to_process(directory)
     
+    if not selected_files:
+        print("No files selected or found for processing.")
+        return
+
     for file_path in selected_files:
         df = handle_data(file_path)
         if df is not None:
