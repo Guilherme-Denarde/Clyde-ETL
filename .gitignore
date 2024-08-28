@@ -1,3 +1,6 @@
+# Keep example
+!data/input/example/customers-100.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -48,5 +51,3 @@ Thumbs.db
 *.csv
 *.pdf
 
-# Keep example
-!data/input/example/customers-100.csv
