@@ -1,10 +1,12 @@
-import ollama
+import os
+import time
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import json
-import os
-import time
+import numpy as np
+import ollama
+
 from config.config import OUTPUT_DIR
 
 def analyze_for_bi(data):
@@ -21,15 +23,15 @@ def analyze_for_bi(data):
     for col in data.columns:
         unique_count = data[col].nunique()
         null_count = data[col].isnull().sum()
-        most_common = data[col].mode().iloc[0] if not data[col].mode().empty else None
+        most_common = data[col].mode().iloc[0] if not data[col].mode().empty else str(None)
         top_values = data[col].dropna().unique()[:5].tolist()
-        dtype = data[col].dtype
+        dtype = str(data[col].dtype)
 
         profile['column'].append(col)
         profile['unique_values'].append(unique_count)
         profile['null_values'].append(null_count)
         profile['most_common'].append(most_common)
-        profile['top_values'].append(top_values)
+        profile['top_values'].append([str(value) for value in top_values])
         profile['data_type'].append(dtype)
 
         if dtype in ['int64', 'float64'] and unique_count > 10:
@@ -42,20 +44,24 @@ def analyze_for_bi(data):
     return pd.DataFrame(profile)
 
 def ai_analysis(file_path):
-    print("Starting AI analysis, this may take some time...")
+    print("Starting AI analysis...")
     data_csv = pd.read_csv(file_path)
     df_profile = analyze_for_bi(data_csv)
 
     label_encoder = LabelEncoder()
-    df_profile['data_type_encoded'] = label_encoder.fit_transform(df_profile['data_type'])
+    df_profile['data_type_encoded'] = label_encoder.fit_transform(df_profile['data_type'].astype(str))
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(df_profile[['unique_values', 'null_values', 'data_type_encoded']])
     kmeans = KMeans(n_clusters=3, random_state=42)
     df_profile['cluster'] = kmeans.fit_predict(X_scaled)
 
+   
+    data_info = df_profile.to_dict('records')  
+
     formatted_data = {
-        "data": df_profile['column'].tolist(),
-        "instructions": "Analyze the provided data and recommend an optimal database schema. Suggest relationships between dimensions and facts, and identify potential primary and foreign keys."
+        "columns": df_profile['column'].tolist(),
+        # "data_info": data_info,
+        "instructions": "Analyze the provided data and recommend an optimal database schema. Suggest relationships between dimensions and facts, create a title based on the column headers, and identify potential primary and foreign keys."
     }
 
     formatted_json = json.dumps(formatted_data, indent=4)
