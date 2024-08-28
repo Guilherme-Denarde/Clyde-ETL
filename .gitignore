@@ -47,3 +47,6 @@ Thumbs.db
 # Ignore commonly large file formats that might be used in data processing
 *.csv
 *.pdf
+
+# Keep example
+!data\input\example\customers-100.csv
