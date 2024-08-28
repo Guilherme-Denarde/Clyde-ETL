@@ -171,5 +171,3 @@ data/currency_rates.json
 # Ignore files
 *.csv
 *.pdf
-
-data/input/stack-overflow-developer-survey-2024/survey_results_public.csv
