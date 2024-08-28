@@ -1,6 +1,6 @@
 import os
 import inquirer
-from utils.display import display_with_art, clear_screen, process_file  # Ensure correct imports
+from utils.display import display_with_art, clear_screen, process_file 
 from etl.extractor import extract_and_select_file
 from etl.transformer import process_data
 from etl.loader import write_to_file

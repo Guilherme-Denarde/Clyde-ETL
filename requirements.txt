@@ -1,4 +1,8 @@
 pandas
+numpy
 sqlalchemy
 inquirer
 ollama
+scikit-learn
+matplotlib
+python-dotenv
