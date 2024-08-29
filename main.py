@@ -23,7 +23,7 @@ def main():
     global file_name
     data = None
     action = main_menu()
-    
+
     while action != 'Exit':
         
         if action == 'Extract Data':
@@ -31,13 +31,13 @@ def main():
             if data is not None:
                 file_name = os.path.basename(file_path)
                 print(f"Data extracted from {file_path}")
-                process_file(file_name=file_name)  
+                process_file(file_name=file_name)
             else:
                 print("No data extracted.")
         
         elif action == 'Transform Data':
             if data is not None:
-                processed_data = process_data(data)
+                processed_data, _ = process_data(data)  
                 data = processed_data
                 print("Data transformed.")
             else:
@@ -51,12 +51,10 @@ def main():
                 print("No data available to load.")
         
         elif action == 'Clean Data':
-            if data is not None:  
-                print("Data is available for cleaning.")
+            if data is not None:
                 try:
                     cleaned_data = handle_data(data)
                     if cleaned_data is not None:
-                        print("Data cleaned successfully.")
                         data = cleaned_data
                         output_file = os.path.join(OUTPUT_DIR, f"cleaned_{file_name}")
                         cleaned_data.to_csv(output_file, index=False)
@@ -80,7 +78,6 @@ def main():
             else:
                 print("No data file selected for AI analysis, please extract or specify a file first.")
 
-        
         action = main_menu()
 
 if __name__ == "__main__":

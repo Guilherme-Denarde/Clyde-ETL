@@ -60,7 +60,7 @@ def ai_analysis(file_path):
 
     formatted_data = {
         "columns": df_profile['column'].tolist(),
-        # "data_info": data_info,
+        "data_info": data_info,
         "instructions": "Analyze the provided data and recommend an optimal database schema. Suggest relationships between dimensions and facts, create a title based on the column headers, and identify potential primary and foreign keys."
     }
 
